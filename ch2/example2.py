@@ -5,6 +5,7 @@ import urllib.request
 import matplotlib.pyplot as plt
 import numpy as np
 from zlib import crc32
+from sklearn.model_selection import StratifiedShuffleSplit
 
 
 def load_housing_data():
@@ -36,6 +37,21 @@ housing = load_housing_data()
 housing.head()
 housing.info()
 
+housing["income_cat"] = pd.cut(housing["median_income"],
+                                       bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+                                       labels=[1, 2, 3, 4, 5])
+                              
+housing["income_cat"].value_counts().sort_index().plot.bar(rot=0, grid=True)
+plt.xlabel("Income category")
+plt.ylabel("Number of districts")
+plt.show() 
+
+splitter = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+strat_splits = []
+for train_index, test_index in splitter.split(housing, housing["income_cat"]):
+  strat_train_set_n = housing.iloc[train_index]
+  strat_test_set_n = housing.iloc[test_index]
+  strat_splits.append([strat_train_set_n, strat_test_set_n])
 
 # housing.hist(bins=50, figsize=(12, 8))
 # plt.show()
