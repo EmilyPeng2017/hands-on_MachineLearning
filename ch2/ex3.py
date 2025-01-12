@@ -56,4 +56,4 @@ for train_index, test_index in splitter.split(housing, housing["income_cat"]):
 # housing.hist(bins=50, figsize=(12, 8))
 # plt.show()
 
-housing = strat_train_set.cooy()
+housing = strat_train_set.copy()
